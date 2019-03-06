@@ -28,20 +28,27 @@ public class ProductController {
      * Basic Constructor for Products - Retrieves from DB
      */
     public ProductController() {
-        try {
+        getProductsFromDB();
+   
+    }
+    
+    private void getProductsFromDB(){
+         try {
             Connection conn = DBUtils.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM Products");
+            products.clear();
             while (rs.next()) {
                 Product p = new Product();
                 p.setName(rs.getString("Name"));
                 p.setProductId(rs.getInt("ProductId"));
+                p.setVendorId(rs.getInt("VendorId"));
                 products.add(p);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+}
 
     /**
      * Retrieve the full list of Products
@@ -69,21 +76,70 @@ public class ProductController {
     public void setThisProduct(Product thisProduct) {
         this.thisProduct = thisProduct;
     }
+      public Product getById(int id){
+        for(Product p : products){
+            if(p.getVendorId() == id){
+                return p;
+            }
+        }
+        return null;
+    }
+    /**
+     * 
+     * @param id
+     * @return 
+     */
+    public String editById(int id){
+        thisProduct = getById(id);
+        return "addProduct";
+    }
 
     /**
      * Add a new Product to the Database and List
      */
-    public void add() {
+    public String add() {
         try {
             Connection conn = DBUtils.getConnection();
+            if(thisProduct.getProductId() == 0){
             String sql = "INSERT INTO Products (Name, VendorId) VALUES (?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, thisProduct.getName());
+            pstmt.setInt(2, thisProduct.getVendorId());
             pstmt.executeUpdate();
+            }else{
+                    String sql = "UPDATE Products SET Name = ?, VendorId = ? WHERE ProductId = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, thisProduct.getName());
+            pstmt.setInt(2, thisProduct.getVendorId());
+            pstmt.setInt(3, thisProduct.getProductId());
+            pstmt.executeUpdate();
+            }               
             products.add(thisProduct);
+            getProductsFromDB();
             thisProduct = new Product();
+            return "index";
         } catch (SQLException ex) {
             Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
+        
+    }
+    
+    public String removeById(int id){
+               try {
+            Connection conn = DBUtils.getConnection();
+            String sql = "DELETE FROM Products WHERE ProductId = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            getProductsFromDB();
+            thisProduct = new Product();
+            return "index";
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        
+        
     }
 }
