@@ -7,22 +7,73 @@
         <title>CSD4464-Midterm</title>
     </h:head>
     <h:body>
-        <h:dataTable value="#{productController.products}" var="p">
-            <h:column>
-                <f:facet name="header">ID</f:facet>
-                    #{p.productId}
-            </h:column>
+        <h:form>
+            <h:dataTable value="#{productController.products}" var="p">
+                <h:column>
+                    <f:facet name="header">ID</f:facet>
+                        #{p.productId}
+                </h:column>
 
-            <h:column>
-                <f:facet name="header">Name</f:facet>
-                    #{p.name}
-            </h:column>            
-            <h:column>
-                <f:facet name="header">Vendor</f:facet>
-                    #{p.vendorId}
-            </h:column>
-        </h:dataTable>
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                        #{p.name}
+                </h:column>            
+                <h:column>
+                    <f:facet name="header">Vendor</f:facet>
+                        #{p.vendorId}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Vendor Name</f:facet>
+                        #{vendorController.getById(p.vendorId).name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Contact Name</f:facet>
+                        #{vendorController.getById(p.vendorId).contactName}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Phone number</f:facet>
+                        #{vendorController.getById(p.vendorId).phone}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+                    <h:commandButton value="Delete" action="#{productController.removeById(p.productId)}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+                    <h:commandButton value="Edit" action="#{productController.editById(p.productId)}"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
         <h:link outcome="addProduct" value="Add Product" />
+        <h:form>
+            <h:dataTable value="#{vendorController.vendors}" var="v">
+                <h:column>
+                    <f:facet name="header">ID</f:facet>
+                        #{v.vendorId}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                        #{v.name}
+                </h:column>            
+                <h:column>
+                    <f:facet name="header">Contact Name</f:facet>
+                        #{v.contactName}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Phone Number</f:facet>
+                        #{v.phone}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+                    <h:commandButton value="Delete" action="#{vendorController.removeById(v.vendorId)}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+                    <h:commandButton value="Edit" action="#{vendorController.editById(v.vendorId)}"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+        <h:link outcome="addVendor" value="Add Vendor" />
     </h:body>
 </html>
 

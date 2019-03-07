@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class DBUtils {
 
-    private final static String studentNumber = "";
+    private final static String studentNumber = "c0006557";
 
     /**
      * Utility method used to create a Database Connection
@@ -23,15 +23,15 @@ public class DBUtils {
      */
     public static Connection getConnection() throws SQLException {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DBUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String server = "ipro.lambton.on.ca";
-        String username = studentNumber + "-java";
+        String server = "localhost";
+        String username = studentNumber;
         String password = studentNumber;
-        String database = username;
-        String jdbc = String.format("jdbc:mysql://%s/%s", server, database);
+        String database = username + "-java";
+        String jdbc = String.format("jdbc:derby://%s/%s", server, database);
         return DriverManager.getConnection(jdbc, username, password);
     }
 }
